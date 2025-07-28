@@ -1,3 +1,13 @@
+# ================================
+# FOUNDRY & SOLIDITY DEPENDENCIES
+# ================================
+# Foundry lib directory (dependencies)
+contracts/lib/
+lib/
+
+# Foundry cache and artifacts
+contracts/cache/
+contracts/out/
 cache
 out
 zkout
@@ -5,9 +15,15 @@ proofs
 broadcast
 .env
 plonk_vk.sol
-dist
+
+# ================================
+# ZK CIRCUIT FILES
+# ================================
 circuits/target/vk
 circuits/target/panagram.gz
+circuits/target/*.gz
+circuits/target/*.r1cs
+circuits/target/*.ptau
 */Prover.toml
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
