@@ -3,18 +3,23 @@ import { useReadContract } from "wagmi";
 import { abi } from "../abi/abi";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant";
 
-const GATEWAY = import.meta.env.VITE_PINATA_GATEWAY!;
+const GATEWAY = "https://ipfs.io/ipfs/";
 
 const convertToReliableGateway = (url: string) => {
-  if (url.startsWith("https://ipfs.io/ipfs/")) {
-    return `${GATEWAY}${url.split("https://ipfs.io/ipfs/")[1]}`;
+  if (url.startsWith("ipfs://")) {
+    return url.replace("ipfs://", GATEWAY);
   }
-  return url.startsWith("ipfs://") ? url.replace("ipfs://", GATEWAY) : url;
+  if (url.startsWith("https://ipfs.io/ipfs/")) {
+    return url; // すでに正しいフォーマット
+  }
+  return url;
 };
 
 const fetchMetadata = async (uri: string, token_id: number) => {
   const resolvedURI = uri.replace(/{id}/g, token_id.toString());
   const reliableUrl = convertToReliableGateway(resolvedURI);
+
+  console.log("Fetching metadata from:", reliableUrl);
 
   try {
     const response = await fetch(reliableUrl, {
@@ -23,11 +28,14 @@ const fetchMetadata = async (uri: string, token_id: number) => {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const metadata = await response.json();
+    console.log("Fetched metadata:", metadata);
+    
+    const imageUrl = metadata.image ? convertToReliableGateway(metadata.image) : null;
+    console.log("Converted image URL:", imageUrl);
+    
     return {
       metadata,
-      imageUrl: metadata.image
-        ? convertToReliableGateway(metadata.image)
-        : null,
+      imageUrl,
     };
   } catch (error) {
     console.error("Error fetching metadata:", error);
@@ -113,7 +121,11 @@ function NFTCard({
           src={imageUrl}
           alt={`NFT ${tokenId}`}
           className="mt-4 max-w-full h-auto rounded-md"
-          onError={(e) => (e.currentTarget.style.display = "none")}
+          onLoad={() => console.log("Image loaded successfully:", imageUrl)}
+          onError={(e) => {
+            console.error("Image failed to load:", imageUrl);
+            e.currentTarget.style.display = "none";
+          }}
         />
       ) : (
         <p className="text-gray-600 mt-4">No image available.</p>

@@ -5,14 +5,14 @@ import { Noir } from "@noir-lang/noir_js";
 
 import { CompiledCircuit } from '@noir-lang/types';
 
-import { ANSWER_HASH } from "../constant";
 
 
-export async function generateProof(guess: string, address: string, showLog:(content: string) => void): Promise<{ proof: Uint8Array, publicInputs: string[] }> {
+
+export async function generateProof(guess_hash: string, address: string, answer_double_hash: string, showLog:(content: string) => void): Promise<{ proof: Uint8Array, publicInputs: string[] }> {
   try {
     const noir = new Noir(circuit as CompiledCircuit);
     const honk = new UltraHonkBackend(circuit.bytecode, { threads: 1 });
-    const inputs = { guess: guess, address: address, expected_hash: ANSWER_HASH };
+    const inputs = { guess_hash, address, answer_double_hash };
 
     showLog("Generating witness... ⏳");
     const { witness } = await noir.execute(inputs);

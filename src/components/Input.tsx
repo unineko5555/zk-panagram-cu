@@ -5,7 +5,7 @@ import {
   useAccount,
 } from "wagmi";
 import { abi } from "../abi/abi.ts";
-import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
+import { PANAGRAM_CONTRACT_ADDRESS, ANSWER_DOUBLE_HASH } from "../constant.ts";
 import { generateProof } from "../utils/generateProof.ts";
 import { keccak256, toUtf8Bytes } from "ethers";
 import { uint8ArrayToHex, FIELD_MODULUS } from "../utils/helpers.ts";
@@ -48,7 +48,7 @@ export default function Input() {
       const guessHash = "0x" + reducedGuess.toString(16).padStart(64, "0");
 
       // Step 4: Call your proof generator with the field-safe hash
-      const { proof } = await generateProof(guessHash, address, showLog);
+      const { proof } = await generateProof(guessHash, address, ANSWER_DOUBLE_HASH, showLog);
 
       // Send transaction and get transaction hash
       await writeContract({
