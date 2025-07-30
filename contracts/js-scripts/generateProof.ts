@@ -1,4 +1,4 @@
-import { Barretenberg, Fr, UltraHonkBackend } from "@aztec/bb.js";
+import { Barretenberg, UltraHonkBackend } from "@aztec/bb.js";
 import { ethers } from "ethers";
 import { Noir } from "@noir-lang/noir_js";
 import path from 'path';
@@ -9,8 +9,8 @@ const circuitPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 const circuit = JSON.parse(fs.readFileSync(circuitPath, 'utf8'));
 
 export default async function generateProof() {
-  // Initialize Barretenberg
-  const bb = await Barretenberg.new();
+  // Initialize Barretenberg (required for UltraHonkBackend)
+  await Barretenberg.new();
 
   // Get the inputs from the args
   const inputs = process.argv.slice(2);
@@ -34,8 +34,6 @@ export default async function generateProof() {
     console.log = () => {};
 
     const { proof, publicInputs } = await honk.generateProof(witness, { keccak: true });
-    const offChainProof = await honk.generateProof(witness);
-    const isValid = await honk.verifyProof(offChainProof);
     // Restore original console.log
     console.log = originalLog;
 

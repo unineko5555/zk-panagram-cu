@@ -43,7 +43,7 @@ export default function NFTGallery({
   token_id: number;
 }) {
   const [nftData, setNftData] = useState<{
-    metadata: any;
+    metadata: Record<string, unknown> | null;
     imageUrl: string | null;
   }>({
     metadata: null,

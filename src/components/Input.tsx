@@ -8,25 +8,7 @@ import { abi } from "../abi/abi.ts";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
 import { generateProof } from "../utils/generateProof.ts";
 import { keccak256, toUtf8Bytes } from "ethers";
-
-const FIELD_MODULUS = BigInt(
-  "21888242871839275222246405745257275088548364400416034343698204186575808495617"
-);
-
-// taken from @aztec/bb.js/proof
-export function uint8ArrayToHex(buffer: Uint8Array): string {
-  const hex: string[] = [];
-
-  buffer.forEach(function (i) {
-    let h = i.toString(16);
-    if (h.length % 2) {
-      h = "0" + h;
-    }
-    hex.push(h);
-  });
-
-  return hex.join("");
-}
+import { uint8ArrayToHex, FIELD_MODULUS } from "../utils/helpers.ts";
 
 export default function Input() {
   const { data: hash, isPending, writeContract, error } = useWriteContract();

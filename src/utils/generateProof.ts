@@ -1,6 +1,6 @@
 import { UltraHonkBackend, } from "@aztec/bb.js";
-import circuit from "../../circuits/target/panagram.json";
-// @ts-ignore
+import circuit from "../../circuits/target/zk_panagram.json";
+// @ts-expect-error - Noir types may not be fully compatible
 import { Noir } from "@noir-lang/noir_js";
 
 import { CompiledCircuit } from '@noir-lang/types';
